@@ -1,3 +1,7 @@
 openai
 yt-dlp
 python-dotenv
+flask
+werkzeug
+requests
+tqdm
