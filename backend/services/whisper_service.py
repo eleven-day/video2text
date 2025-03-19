@@ -50,7 +50,7 @@ class WhisperService:
                 options["language"] = language
             
             response = openai.audio.transcriptions.create(
-                audio=audio_file,
+                file=audio_file,
                 **options
             )
             return response["text"]
