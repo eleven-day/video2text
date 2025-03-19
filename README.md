@@ -1,91 +1,197 @@
 # Video2Text Converter
 
-This application converts videos to text by either extracting subtitles or transcribing the audio using Whisper.
+<div align="center">
 
-## Features
+![Video2Text Logo](https://img.shields.io/badge/Video2Text-Converter-blue?style=for-the-badge)
 
-- Upload local video files or provide video URLs
-- Extract embedded subtitles (SRT) if available
-- Transcribe audio using OpenAI's Whisper API or local Whisper model
-- Support for multiple languages
-- Simple and intuitive UI
+[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.95.1-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![FFmpeg](https://img.shields.io/badge/FFmpeg-Required-007808?logo=ffmpeg&logoColor=white)](https://ffmpeg.org/)
+[![License](https://img.shields.io/github/license/yourusername/video2text?style=flat)](LICENSE)
 
-## Prerequisites
+*Convert videos to text easily - extract subtitles or transcribe audio with Whisper AI*
+
+</div>
+
+## 📝 Overview
+
+Video2Text is a powerful web application that extracts text from videos through subtitle extraction or audio transcription. The tool uses FFmpeg to process videos and OpenAI's Whisper (both API and local model options) for accurate speech-to-text conversion.
+
+Perfect for:
+- Creating searchable transcripts from video content
+- Extracting dialogue from movies and TV shows
+- Converting lecture videos to study notes
+- Making video content accessible
+
+<div align="center">
+  <img src="screenshots/demo.gif" alt="Video2Text Demo" width="700">
+</div>
+
+## ✨ Features
+
+- **Multiple Input Methods**
+  - Upload local video files
+  - Provide video URLs for remote processing
+
+- **Smart Processing Pipeline**
+  - First attempts to extract embedded subtitles (SRT)
+  - Falls back to audio transcription if subtitles aren't available
+
+- **Flexible Transcription Options**
+  - OpenAI's Whisper API for cloud-based processing
+  - Local Whisper model for offline/private processing
+  - Support for multiple languages
+
+- **User-Friendly Interface**
+  - Clean, responsive design built with React and Material UI
+  - Real-time processing status updates
+  - Easy copy and download of results
+
+- **Containerized Deployment**
+  - Docker and Docker Compose support for easy deployment
+
+## 🖼️ Screenshots
+
+<div align="center">
+  <img src="screenshots/upload-screen.png" alt="Upload Screen" width="45%">
+  &nbsp;&nbsp;
+  <img src="screenshots/results-screen.png" alt="Results Screen" width="45%">
+</div>
+
+## 🛠️ Technology Stack
+
+- **Frontend**:
+  - React 18
+  - Material UI
+  - Axios for API communication
+
+- **Backend**:
+  - FastAPI (Python)
+  - FFmpeg for video processing
+  - Whisper AI for speech recognition
+  - OpenAI API integration
+
+## 🚀 Installation & Setup
+
+### Prerequisites
 
 - Python 3.8+
 - Node.js 14+
 - FFmpeg installed and available in PATH
-- OpenAI API key (optional, for using OpenAI's Whisper API)
+- OpenAI API key (optional, for cloud transcription)
 
-## Backend Setup
+### Backend Setup
 
-1. Navigate to the backend directory:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/video2text.git
+   cd video2text
    ```
+
+2. Set up backend environment:
+   ```bash
    cd backend
-   ```
-
-2. Create a virtual environment:
-   ```
    python -m venv venv
-   ```
-
-3. Activate the virtual environment:
-   - Windows: `venv\Scripts\activate`
-   - Linux/Mac: `source venv/bin/activate`
-
-4. Install dependencies:
-   ```
+   
+   # Activate the virtual environment
+   # Windows:
+   venv\Scripts\activate
+   # Linux/Mac:
+   source venv/bin/activate
+   
+   # Install dependencies
    pip install -r requirements.txt
    ```
 
-5. If you want to use the local Whisper model, uncomment the line in requirements.txt and run:
+3. Configure OpenAI API (optional):
+   ```bash
+   # Windows
+   set OPENAI_API_KEY=your_api_key
+   
+   # Linux/Mac
+   export OPENAI_API_KEY=your_api_key
    ```
+
+4. For local Whisper model (optional):
+   ```bash
    pip install openai-whisper
    ```
 
-6. Set environment variables:
-   - If using OpenAI API: `set OPENAI_API_KEY=your_api_key` (Windows) or `export OPENAI_API_KEY=your_api_key` (Linux/Mac)
-
-7. Start the backend server:
-   ```
-   uvicorn main:app --reload
+5. Start the backend server:
+   ```bash
+   uvicorn main:app --reload --host 0.0.0.0 --port 8000
    ```
 
-## Frontend Setup
+### Frontend Setup
 
-1. Navigate to the frontend directory:
-   ```
-   cd frontend
-   ```
-
-2. Install dependencies:
-   ```
+1. Navigate to frontend directory and install dependencies:
+   ```bash
+   cd ../frontend
    npm install
    ```
 
-3. Start the development server:
-   ```
+2. Start the development server:
+   ```bash
    npm start
    ```
 
-4. The application will be available at http://localhost:3000
+3. Access the application at http://localhost:3000
 
-## Usage
+### Docker Deployment (Alternative)
 
-1. Choose whether to upload a video file or provide a URL
-2. Configure transcription settings:
-   - Choose language or leave as "auto" for automatic detection
-   - Toggle whether to use OpenAI API or local Whisper model
-3. Submit and wait for processing to complete
-4. View, copy, or download the transcribed text
+```bash
+# Create .env file with your OpenAI API key
+cp .env.example .env
+# Edit the .env file with your actual API key
 
-## How It Works
+# Start the services
+docker-compose up -d
+```
 
-1. User uploads a video or provides a URL
-2. Backend extracts subtitles from the video if available
-3. If no subtitles are found, audio is extracted and sent to Whisper for transcription
-4. The transcribed text is returned to the frontend for display
+## 📋 API Documentation
 
-## License
+Once the backend is running, API documentation is available at:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
 
-MIT
+### Key Endpoints
+
+- `POST /upload/file` - Upload and process a video file
+- `POST /upload/url` - Process a video from a URL
+- `GET /status/{job_id}` - Check the status of a processing job
+
+## 💡 How It Works
+
+1. **Input Handling**: The application accepts video files or URLs.
+
+2. **Processing Pipeline**:
+   ```
+   Video Input → FFmpeg Subtitle Extraction → If subtitles found → Parse & Return Text
+                                           → If no subtitles → Extract Audio → Whisper Transcription
+   ```
+
+3. **Background Processing**: All heavy processing happens asynchronously, allowing users to continue using the application.
+
+4. **Status Updates**: Clients poll for job status until completion.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgements
+
+- [OpenAI's Whisper](https://github.com/openai/whisper) for the powerful speech recognition model
+- [FFmpeg](https://ffmpeg.org/) for video processing capabilities
+- [FastAPI](https://fastapi.tiangolo.com/) for the efficient backend framework
+- [React](https://reactjs.org/) and [Material UI](https://mui.com/) for the frontend interface
