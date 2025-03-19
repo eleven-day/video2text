@@ -49,7 +49,10 @@ class WhisperService:
             if language != "auto":
                 options["language"] = language
             
-            response = openai.Audio.transcribe(**options, file=audio_file)
+            response = openai.audio.transcriptions.create(
+                audio=audio_file,
+                **options
+            )
             return response["text"]
     
     def _transcribe_with_local_model(self, audio_path: str, language: str) -> str:

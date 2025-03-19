@@ -1,9 +1,7 @@
 import os
 import subprocess
 import tempfile
-import requests
 from typing import Optional
-import re
 import logging
 import chardet
 
@@ -35,30 +33,37 @@ class VideoProcessor:
                 os.remove(video_path)
 
     def process_video_url(self, url: str, job_id: str, settings: TranscriptionSettings):
-        """Download and process a video from a URL."""
+        """Download and process a video from a URL using yt-dlp."""
+        tmp_path = None
         try:
-            # Create a temporary file
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp_file:
-                tmp_path = tmp_file.name
+            # Create a temporary file with a unique name
+            tmp_dir = tempfile.mkdtemp()
+            tmp_path = os.path.join(tmp_dir, f"{job_id}.mp4")
             
-            # Download the video
-            response = requests.get(url, stream=True)
-            response.raise_for_status()
-            
-            with open(tmp_path, 'wb') as f:
-                for chunk in response.iter_content(chunk_size=8192):
-                    f.write(chunk)
+            # Download the video using yt-dlp
+            logger.info(f"Downloading video from {url}")
+            yt_dlp_cmd = [
+                "yt-dlp", 
+                "-f", "mp4",  # Format
+                "-o", tmp_path,  # Output
+                url  # URL
+            ]
+            subprocess.run(yt_dlp_cmd, check=True)
             
             # Process the downloaded video
+            logger.info(f"Video downloaded successfully, processing...")
             text = self._process_video_file(tmp_path, settings)
             self._save_result(job_id, text)
+            
         except Exception as e:
             logger.error(f"Error processing video from URL: {str(e)}")
             self._save_error(job_id, str(e))
         finally:
             # Cleanup
-            if 'tmp_path' in locals() and os.path.exists(tmp_path):
+            if tmp_path and os.path.exists(tmp_path):
                 os.remove(tmp_path)
+            if 'tmp_dir' in locals() and os.path.exists(tmp_dir):
+                os.rmdir(tmp_dir)
 
     def _process_video_file(self, video_path: str, settings: TranscriptionSettings) -> str:
         """Process a video file to extract text."""
