@@ -14,6 +14,8 @@
 
 </div>
 
+> An open-source tool that converts video content to text by extracting embedded subtitles or transcribing audio using Whisper AI. Perfect for making video content searchable, accessible, and easier to analyze.
+
 ## 📝 Overview
 
 Video2Text is a powerful web application that extracts text from videos through subtitle extraction or audio transcription. The tool uses FFmpeg to process videos and OpenAI's Whisper (both API and local model options) for accurate speech-to-text conversion.
