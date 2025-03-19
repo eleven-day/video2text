@@ -1,61 +1,91 @@
-# Video to Text with OpenAI Whisper API
+# Video2Text Converter
 
-本项目演示如何从视频网站下载视频文件，提取音频，并使用 OpenAI Whisper 云端 API 将音频转录为文本。
+This application converts videos to text by either extracting subtitles or transcribing the audio using Whisper.
 
-## 目录结构
+## Features
 
-```
-video-to-text/
-├── .env                  # 可选，用于存储 OPENAI_API_KEY
-├── README.md             # 项目说明
-├── requirements.txt      # 依赖库列表
-├── downloader.py         # 下载视频模块
-├── audio_extractor.py    # 提取音频模块
-├── stt_api.py            # 调用 OpenAI Whisper API 模块
-├── file_utils.py         # 文件操作工具模块
-└── main.py               # 主入口
-```
+- Upload local video files or provide video URLs
+- Extract embedded subtitles (SRT) if available
+- Transcribe audio using OpenAI's Whisper API or local Whisper model
+- Support for multiple languages
+- Simple and intuitive UI
 
-## 安装依赖
+## Prerequisites
 
-1. 克隆/下载本项目。  
-2. 在项目根目录下执行:
+- Python 3.8+
+- Node.js 14+
+- FFmpeg installed and available in PATH
+- OpenAI API key (optional, for using OpenAI's Whisper API)
+
+## Backend Setup
+
+1. Navigate to the backend directory:
+   ```
+   cd backend
+   ```
+
+2. Create a virtual environment:
+   ```
+   python -m venv venv
+   ```
+
+3. Activate the virtual environment:
+   - Windows: `venv\Scripts\activate`
+   - Linux/Mac: `source venv/bin/activate`
+
+4. Install dependencies:
    ```
    pip install -r requirements.txt
    ```
-3. 确保系统环境中已安装 ffmpeg，并可直接通过命令 ffmpeg 调用。
 
-## 配置 OpenAI API Key
-
-1. 在 OpenAI 平台(https://platform.openai.com/) 生成 API Key。  
-2. 在项目根目录下创建 .env 文件，并写入你的 API Key，例如：  
+5. If you want to use the local Whisper model, uncomment the line in requirements.txt and run:
    ```
-   OPENAI_API_KEY=sk-xxxxxxxxxx
+   pip install openai-whisper
    ```
-   或者在代码中直接设置 openai.api_key = "sk-xxxxxx"。
 
-## 运行
+6. Set environment variables:
+   - If using OpenAI API: `set OPENAI_API_KEY=your_api_key` (Windows) or `export OPENAI_API_KEY=your_api_key` (Linux/Mac)
 
-在命令行执行：
+7. Start the backend server:
+   ```
+   uvicorn main:app --reload
+   ```
 
-```
-python main.py <视频链接> <输出文本文件>
-```
+## Frontend Setup
 
-示例：
-```
-python main.py https://www.youtube.com/watch?v=XXXX my_transcript.txt
-```
+1. Navigate to the frontend directory:
+   ```
+   cd frontend
+   ```
 
-程序会自动完成以下操作：  
-1. 使用 yt-dlp 下载视频到临时目录。  
-2. 使用 ffmpeg 提取音频。  
-3. 调用 OpenAI Whisper API 转录音频得到文本。  
-4. 将文本内容保存到 my_transcript.txt。  
-5. 最后删除临时目录及下载的文件。
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-## 注意事项
+3. Start the development server:
+   ```
+   npm start
+   ```
 
-- ffmpeg 使用请参考 https://ffmpeg.org 下载并安装。  
-- OpenAI Whisper API 目前是付费 API，请确保你的账户余额充足。  
-- 如果需要识别其他语言，请在 `stt_api.py` 中配置对应的参数(详见 OpenAI Whisper API 文档)。  
+4. The application will be available at http://localhost:3000
+
+## Usage
+
+1. Choose whether to upload a video file or provide a URL
+2. Configure transcription settings:
+   - Choose language or leave as "auto" for automatic detection
+   - Toggle whether to use OpenAI API or local Whisper model
+3. Submit and wait for processing to complete
+4. View, copy, or download the transcribed text
+
+## How It Works
+
+1. User uploads a video or provides a URL
+2. Backend extracts subtitles from the video if available
+3. If no subtitles are found, audio is extracted and sent to Whisper for transcription
+4. The transcribed text is returned to the frontend for display
+
+## License
+
+MIT
