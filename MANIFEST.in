@@ -1,0 +1,21 @@
+include README.md
+include LICENSE
+include PYPI_GUIDE.md
+include pyproject.toml
+include MANIFEST.in
+
+recursive-include video2text *.py
+recursive-include tests *.py
+recursive-include examples *.py *.txt *.md
+recursive-include scripts *.py *.sh *.bat
+
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude __pycache__
+global-exclude .git*
+global-exclude .pytest_cache
+global-exclude .mypy_cache
+global-exclude *.egg-info
+global-exclude build
+global-exclude dist 

@@ -1,0 +1,142 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "video2text"
+version = "1.0.0"
+description = "A powerful video-to-text tool that supports multiple video formats and languages"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+maintainers = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Linguistic",
+]
+keywords = ["video", "transcription", "whisper", "speech-to-text", "subtitles"]
+requires-python = ">=3.8"
+dependencies = [
+    "openai-whisper>=20231117",
+    "yt-dlp>=2023.11.16",
+    "ffmpeg-python>=0.2.0",
+    "torch>=2.0.0",
+    "torchaudio>=2.0.0",
+    "fastapi>=0.104.1",
+    "uvicorn[standard]>=0.24.0",
+    "streamlit>=1.28.0",
+    "click>=8.1.0",
+    "pydantic>=2.5.0",
+    "python-multipart>=0.0.6",
+    "aiofiles>=23.2.1",
+    "jinja2>=3.1.0",
+    "requests>=2.31.0",
+    "tqdm>=4.66.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8",
+    "mypy>=1.6.0",
+    "build>=1.0.0",
+    "twine>=4.0.0",
+    "wheel>=0.42.0",
+]
+gpu = [
+    "torch[cuda]>=2.0.0",
+    "torchaudio[cuda]>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/video2text"
+Documentation = "https://github.com/yourusername/video2text#readme"
+Repository = "https://github.com/yourusername/video2text"
+Issues = "https://github.com/yourusername/video2text/issues"
+Changelog = "https://github.com/yourusername/video2text/releases"
+
+[project.scripts]
+video2text = "video2text.cli:main"
+
+[tool.setuptools]
+packages = ["video2text"]
+
+[tool.setuptools.package-dir]
+video2text = "video2text"
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+  | temp
+  | downloads
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["video2text"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "whisper.*",
+    "yt_dlp.*",
+    "ffmpeg.*",
+    "torch.*",
+    "torchaudio.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+asyncio_mode = "auto"
