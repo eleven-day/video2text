@@ -1,37 +1,37 @@
-# PyPI打包上传指南
+# PyPI Packaging and Upload Guide
 
-本指南详细说明如何将Video2Text项目打包并上传到PyPI。
+This guide details how to package and upload the Video2Text project to PyPI.
 
-## 前置要求
+## Prerequisites
 
-### 1. 安装必要工具
+### 1. Install Required Tools
 
 ```bash
-# 安装构建和上传工具
+# Install build and upload tools
 pip install build twine
 
-# 或者使用项目依赖
+# Or use project dependencies
 pip install -e ".[dev]"
 ```
 
-### 2. 注册PyPI账户
+### 2. Register a PyPI Account
 
-1. **PyPI正式版**: https://pypi.org/account/register/
-2. **TestPyPI测试版**: https://test.pypi.org/account/register/
+1. **Official PyPI**: https://pypi.org/account/register/
+2. **TestPyPI**: https://test.pypi.org/account/register/
 
-### 3. 配置API Token
+### 3. Configure API Token
 
-#### 方法1: 环境变量(推荐)
+#### Method 1: Environment Variables (Recommended)
 ```bash
-# 设置TestPyPI token
+# Set TestPyPI token
 export TESTPYPI_TOKEN="pypi-your-testpypi-token"
 
-# 设置PyPI token
+# Set PyPI token
 export PYPI_TOKEN="pypi-your-pypi-token"
 ```
 
-#### 方法2: 配置文件
-创建 `~/.pypirc` 文件:
+#### Method 2: Configuration File
+Create a `~/.pypirc` file:
 ```ini
 [distutils]
 index-servers = 
@@ -49,187 +49,187 @@ username = __token__
 password = pypi-your-testpypi-token
 ```
 
-## 使用脚本打包上传
+## Packaging and Uploading with Scripts
 
-### 方法1: 使用Python脚本(推荐)
+### Method 1: Using Python Scripts (Recommended)
 
 ```bash
-# 查看帮助
+# Show help
 python scripts/build_and_upload.py
 
-# 完整流程(测试)
+# Full process (test)
 python scripts/build_and_upload.py --all
 
-# 生产发布
+# Production release
 python scripts/build_and_upload.py --production
 
-# 单独操作
-python scripts/build_and_upload.py --clean    # 清理
-python scripts/build_and_upload.py --build    # 构建
-python scripts/build_and_upload.py --check    # 检查
-python scripts/build_and_upload.py --test-upload  # 上传到TestPyPI
-python scripts/build_and_upload.py --upload   # 上传到PyPI
+# Individual operations
+python scripts/build_and_upload.py --clean        # Clean
+python scripts/build_and_upload.py --build        # Build
+python scripts/build_and_upload.py --check        # Check
+python scripts/build_and_upload.py --test-upload  # Upload to TestPyPI
+python scripts/build_and_upload.py --upload       # Upload to PyPI
 ```
 
-### 方法2: 使用系统脚本
+### Method 2: Using System Scripts
 
-#### Windows系统
+#### Windows
 ```cmd
-# 双击运行或命令行运行
+# Double-click or run in command line
 scripts\build_and_upload.bat
 ```
 
-#### Linux/macOS系统
+#### Linux/macOS
 ```bash
-# 运行脚本
+# Run script
 ./scripts/build_and_upload.sh
 ```
 
-## 手动操作步骤
+## Manual Steps
 
-### 1. 清理构建文件
+### 1. Clean Build Files
 
 ```bash
-# 删除旧的构建文件
+# Remove old build files
 rm -rf build/ dist/ *.egg-info/
 ```
 
-### 2. 更新版本号
+### 2. Update Version Number
 
-编辑 `pyproject.toml` 文件，更新版本号:
+Edit the `pyproject.toml` file to update the version number:
 ```toml
 [project]
 name = "video2text"
-version = "1.0.1"  # 更新版本号
+version = "1.0.1"  # Update the version number
 ```
 
-### 3. 构建包
+### 3. Build the Package
 
 ```bash
-# 构建源码包和wheel包
+# Build source and wheel packages
 python -m build
 ```
 
-构建完成后，会在 `dist/` 目录生成:
-- `video2text-1.0.1.tar.gz` (源码包)
-- `video2text-1.0.1-py3-none-any.whl` (wheel包)
+After building, the `dist/` directory will contain:
+- `video2text-1.0.1.tar.gz` (source package)
+- `video2text-1.0.1-py3-none-any.whl` (wheel package)
 
-### 4. 检查包
+### 4. Check the Package
 
 ```bash
-# 检查包的完整性
+# Check package integrity
 python -m twine check dist/*
 ```
 
-### 5. 测试上传(可选)
+### 5. Test Upload (Optional)
 
 ```bash
-# 上传到TestPyPI进行测试
+# Upload to TestPyPI for testing
 python -m twine upload --repository testpypi dist/*
 
-# 测试安装
+# Test installation
 pip install --index-url https://test.pypi.org/simple/ video2text
 ```
 
-### 6. 正式上传
+### 6. Official Upload
 
 ```bash
-# 上传到PyPI
+# Upload to PyPI
 python -m twine upload dist/*
 ```
 
-## 版本管理策略
+## Version Management Strategy
 
-### 语义化版本控制
+### Semantic Versioning
 
-遵循 [Semantic Versioning](https://semver.org/) 规范:
-- `MAJOR.MINOR.PATCH` (例如: 1.2.3)
-- `MAJOR`: 不兼容的API变更
-- `MINOR`: 向后兼容的功能增加
-- `PATCH`: 向后兼容的问题修复
+Follow the [Semantic Versioning](https://semver.org/) specification:
+- `MAJOR.MINOR.PATCH` (e.g., 1.2.3)
+- `MAJOR`: Incompatible API changes
+- `MINOR`: Backward-compatible feature additions
+- `PATCH`: Backward-compatible bug fixes
 
-### 版本号示例
-
-```
-1.0.0    # 首次发布
-1.0.1    # 修复bug
-1.1.0    # 添加新功能
-2.0.0    # 重大变更
-```
-
-### 预发布版本
+### Version Number Examples
 
 ```
-1.0.0a1  # Alpha版本
-1.0.0b1  # Beta版本
+1.0.0    # Initial release
+1.0.1    # Bug fix
+1.1.0    # New feature
+2.0.0    # Major change
+```
+
+### Pre-release Versions
+
+```
+1.0.0a1  # Alpha version
+1.0.0b1  # Beta version
 1.0.0rc1 # Release Candidate
 ```
 
-## 发布检查清单
+## Release Checklist
 
-### 发布前检查
+### Pre-release Checks
 
-- [ ] 代码已提交到git
-- [ ] 版本号已更新
-- [ ] CHANGELOG已更新
-- [ ] 测试通过
-- [ ] 文档已更新
-- [ ] 依赖版本已确认
+- [ ] Code committed to git
+- [ ] Version number updated
+- [ ] CHANGELOG updated
+- [ ] Tests passed
+- [ ] Documentation updated
+- [ ] Dependency versions confirmed
 
-### 构建检查
+### Build Checks
 
-- [ ] 清理旧的构建文件
-- [ ] 构建成功
-- [ ] 包完整性检查通过
-- [ ] 在TestPyPI测试成功
+- [ ] Old build files cleaned
+- [ ] Build successful
+- [ ] Package integrity check passed
+- [ ] TestPyPI installation successful
 
-### 发布后检查
+### Post-release Checks
 
-- [ ] PyPI页面显示正常
-- [ ] 可以正常安装
-- [ ] 功能测试通过
-- [ ] 创建git标签
-- [ ] 发布说明已发布
+- [ ] PyPI page displays correctly
+- [ ] Installation works
+- [ ] Functional tests passed
+- [ ] Git tag created
+- [ ] Release notes published
 
-## 常见问题
+## Common Issues
 
-### 1. 构建失败
+### 1. Build Failure
 
-**问题**: `python -m build` 失败
-**解决**: 
-- 检查 `pyproject.toml` 配置
-- 确保所有依赖已安装
-- 检查文件结构是否正确
+**Problem**: `python -m build` fails  
+**Solution**: 
+- Check `pyproject.toml` configuration
+- Ensure all dependencies are installed
+- Check if the file structure is correct
 
-### 2. 上传失败
+### 2. Upload Failure
 
-**问题**: `twine upload` 失败
-**解决**:
-- 检查API token是否正确
-- 确保版本号未被使用
-- 检查网络连接
+**Problem**: `twine upload` fails  
+**Solution**:
+- Check if the API token is correct
+- Ensure the version number is not already used
+- Check network connection
 
-### 3. 版本冲突
+### 3. Version Conflict
 
-**问题**: 版本号已存在
-**解决**:
-- 更新版本号
-- 清理并重新构建
-- 不能覆盖已发布的版本
+**Problem**: Version number already exists  
+**Solution**:
+- Update the version number
+- Clean and rebuild
+- You cannot overwrite a published version
 
-### 4. 依赖问题
+### 4. Dependency Issues
 
-**问题**: 安装后缺少依赖
-**解决**:
-- 检查 `pyproject.toml` 中的依赖配置
-- 确保所有必要依赖都已列出
-- 测试在干净环境中安装
+**Problem**: Missing dependencies after installation  
+**Solution**:
+- Check the dependencies configuration in `pyproject.toml`
+- Ensure all necessary dependencies are listed
+- Test installation in a clean environment
 
-## 自动化发布
+## Automated Release
 
 ### GitHub Actions
 
-可以配置GitHub Actions自动发布:
+You can configure GitHub Actions for automated release:
 
 ```yaml
 # .github/workflows/publish.yml
@@ -260,21 +260,21 @@ jobs:
       run: twine upload dist/*
 ```
 
-## 维护建议
+## Maintenance Suggestions
 
-1. **定期更新**: 定期更新依赖和修复bug
-2. **文档维护**: 保持文档与代码同步
-3. **向后兼容**: 尽量保持API向后兼容
-4. **安全更新**: 及时修复安全漏洞
-5. **社区反馈**: 积极回应用户反馈和问题
+1. **Regular Updates**: Regularly update dependencies and fix bugs
+2. **Documentation Maintenance**: Keep documentation in sync with code
+3. **Backward Compatibility**: Try to maintain API backward compatibility
+4. **Security Updates**: Fix security vulnerabilities promptly
+5. **Community Feedback**: Actively respond to user feedback and issues
 
-## 参考资源
+## Reference Resources
 
-- [PyPI官方文档](https://packaging.python.org/)
-- [Twine文档](https://twine.readthedocs.io/)
-- [Python打包指南](https://packaging.python.org/tutorials/packaging-projects/)
-- [语义化版本控制](https://semver.org/)
+- [PyPI Official Documentation](https://packaging.python.org/)
+- [Twine Documentation](https://twine.readthedocs.io/)
+- [Python Packaging Guide](https://packaging.python.org/tutorials/packaging-projects/)
+- [Semantic Versioning](https://semver.org/)
 
 ---
 
-有任何问题，请查看项目的README.md或提交Issue。 
+If you have any questions, please check the project's README.md or submit an issue.
